@@ -1,9 +1,11 @@
 import { useState } from "react";
 import "./App.css";
+import { usePrediction } from "./hooks/usePrediction";
+
 
 function LoanForm() {
+  const { predict, loading, error } = usePrediction();
    const [formData, setFormData] = useState({
-    Loan_ID: "",
     Gender: "Male",
     Married: "No",
     Dependents: "0",
@@ -29,28 +31,22 @@ function LoanForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+
     e.preventDefault();
 
-    let prediction;
+    const prediction = await predict(formData);
 
-    if (
-      Number(formData.ApplicantIncome) > 3000 &&
-      Number(formData.Credit_History) === 1
-    ) {
-      prediction = "It will be Approved";
-    } else {
-      prediction = "It will be Rejected";
-    }
+    setResult(
+    prediction === "Approved"
+      ? "It will be Approved"
+      : "It will be Rejected"
+  );
 
-    setResult(prediction);
-    setShowForm(false); // ⭐ hide form
+  setShowForm(false);
   };
 
-  const handleReset = () => {
-    setShowForm(true);
-    setResult(null);
-  };
+ 
 
   return (
     <div className="loan-form-container">
@@ -172,6 +168,8 @@ function LoanForm() {
       </form>
 
       ):(<h1 style={{color:`${(result=="It will be Rejected")?"red":"green"}`}}>{result}</h1>)}
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
     </div>
   );
 }

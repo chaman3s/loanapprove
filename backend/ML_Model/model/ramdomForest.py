@@ -4,7 +4,7 @@ def bootstrap_sample(X, y):
     n = len(X)
     indices = np.random.choice(n, n, replace=True)
     return X[indices], y[indices]
-def model_v7(X, y, n_trees=20, max_depth=5, min_samples=10):
+def model_v7(X, y, n_trees=10, max_depth=5, min_samples=5):
     forest = []
     for _ in range(n_trees):
         Xb, yb = bootstrap_sample(X, y)

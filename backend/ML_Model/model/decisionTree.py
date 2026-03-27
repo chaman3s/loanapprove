@@ -86,6 +86,7 @@ def build_tree(X, y, depth, max_depth, min_samples):
 
 
 def predict_one(x, tree):
+    x = np.array(x).flatten()
     while isinstance(tree, dict):
         if x[tree["feature"]] <= tree["threshold"]:
             tree = tree["left"]
